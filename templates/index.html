@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+
+    <!-- Search Card -->
+    <div class="card p-2 shadow-sm search-card d-flex align-items-center mb-3">
+      <form method="get" action="{{ url_for('index') }}" class="d-flex flex-grow-1 align-items-center">
+        <span class="me-2"><h4 class="mb-0">🔍 Search Rooms</h4></span>
+        <input type="text" name="q" class="form-control me-2"
+               placeholder="Enter room name"
+               value="{{ request.args.get('q', '') }}">
+        <button class="btn btn-primary">Search</button>
+      </form>
+    </div>
+
+    <!-- Room Stats -->
+    <p>Total Rooms: {{ total }} | Available Rooms: {{ available }}</p>
+    
+    <!-- Filter Form -->
+    <form method="get" class="row g-2 mb-3">
+      <div class="col-md-3">
+        <input type="number" name="min_price" class="form-control"
+               placeholder="Min Price" value="{{ min_price }}">
+      </div>
+      <div class="col-md-3">
+        <input type="number" name="max_price" class="form-control"
+               placeholder="Max Price" value="{{ max_price }}">
+      </div>
+      <div class="col-md-3">
+        <input type="number" name="min_rating" class="form-control"
+               placeholder="Min Rating" value="{{ min_rating }}">
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary w-100">Filter</button>
+      </div>
+    </form>
+
+    <!-- Rooms Grid -->
+    <div class="row">
+      {% for room in rooms %}
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <img src="{{ url_for('static', filename='images/' ~ room.image) }}"
+                 class="card-img-top" alt="{{ room.name }}">
+            <div class="card-body">
+              <h5>{{ room.name }}</h5>
+              <p>Price: ₹{{ room.price }}</p>
+              <p>Rating: ⭐ {{ room.rating }}</p>
+
+              {% if room.booked %}
+                <span class="badge bg-danger">Booked</span>
+                <a href="{{ url_for('cancel_booking', room_id=room.room_id) }}"
+                   class="btn btn-warning w-100 mt-1">Cancel</a>
+              {% else %}
+                <a href="{{ url_for('room_details', room_id=room.room_id) }}"
+                   class="btn btn-primary w-100 mt-1">View Room</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-muted">No rooms found.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center mt-3">
+        {% if page > 1 %}
+          <li class="page-item">
+            <a class="page-link"
+               href="{{ url_for('index', page=page-1, min_price=min_price, max_price=max_price, min_rating=min_rating) }}">
+              Previous
+            </a>
+          </li>
+        {% endif %}
+
+        {% for p in range(1, total_pages+1) %}
+          <li class="page-item {% if p == page %}active{% endif %}">
+            <a class="page-link"
+               href="{{ url_for('index', page=p, min_price=min_price, max_price=max_price, min_rating=min_rating) }}">
+              {{ p }}
+            </a>
+          </li>
+        {% endfor %}
+
+        {% if page < total_pages %}
+          <li class="page-item">
+            <a class="page-link"
+               href="{{ url_for('index', page=page+1, min_price=min_price, max_price=max_price, min_rating=min_rating) }}">
+              Next
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+  </div>
+</div>
+
+
+
+{% endblock %}

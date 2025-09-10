@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Room Details{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+    <h3>{{ room.name }} - ₹{{ room.price }}</h3>
+    <p>Rating: {{ room.rating }} ⭐</p>
+    <div class="room-gallery d-flex gap-2 flex-wrap">
+  <img src="{{ url_for('static', filename='images/1.jpeg') }}" class="gallery-img">
+  <img src="{{ url_for('static', filename='images/2.jpeg') }}" class="gallery-img">
+  <img src="{{ url_for('static', filename='images/3.jpeg') }}" class="gallery-img">
+  <img src="{{ url_for('static', filename='images/4.jpeg') }}" class="gallery-img">
+</div>
+
+
+    {% if room.booked %}
+        <div class="alert alert-warning">This room is already booked!</div>
+    {% else %}
+        <form method="POST">
+            <div class="mb-3">
+                <label>Check-in Date</label>
+                <input type="date" name="checkin" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Check-out Date</label>
+                <input type="date" name="checkout" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Adults</label>
+                <input type="number" name="adults" class="form-control" min="1" value="1" required>
+            </div>
+            <div class="mb-3">
+                <label>Children</label>
+                <input type="number" name="children" class="form-control" min="0" value="0" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Book Now</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

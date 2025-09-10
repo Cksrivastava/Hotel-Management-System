@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="card profile-card">
+        <form method="post">
+            <h2 class="mb-4 text-center">User Profile</h2>
+            
+            <!-- Username (disabled) -->
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" value="{{ user.username }}" disabled required>
+            </div>
+
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" value="{{ user.name or '' }}" required>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="mb-3">
+                <label class="form-label">Mobile Number</label>
+                <input type="text" name="mobile" class="form-control" value="{{ user.mobile or '' }}" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email ID</label>
+                <input type="email" name="email" class="form-control" value="{{ user.email or '' }}" required>
+            </div>
+
+            <!-- Update Button -->
+            <button type="submit" class="btn btn-success w-100">Update Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

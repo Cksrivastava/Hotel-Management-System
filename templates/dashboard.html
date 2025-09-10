@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h2>Welcome, {{ username }}!</h2>
+<p class="text-success">Thanks for booking with us! 😊</p>
+
+<!-- Stats Cards -->
+<div class="row mt-4">
+  <div class="col-md-3">
+    <div class="card text-center p-3 bg-light">
+      <h4>Total Rooms</h4>
+      <p class="fs-3">{{ total_rooms }}</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3 bg-warning">
+      <h4>Booked</h4>
+      <p class="fs-3">{{ booked_rooms }}</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3 bg-success text-white">
+      <h4>Available</h4>
+      <p class="fs-3">{{ available_rooms }}</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3 bg-info text-white">
+      <h4>Total Profit</h4>
+      <p class="fs-3">₹ {{ total_profit }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- User’s Booked Rooms -->
+<h3 class="mt-5">Your Booked Rooms</h3>
+<div class="row">
+  {% if user_rooms %}
+    {% for room in user_rooms %}
+      <div class="col-md-4 mb-3">
+        <div class="card h-100">
+          <img src="{{ url_for('static', filename='images/' ~ room.image) }}" class="card-img-top" alt="{{ room.name }}">
+          <div class="card-body">
+            <h5>{{ room.name }}</h5>
+            <p>Price: ₹{{ room.price }} | Rating: ⭐ {{ room.rating }}</p>
+            <a class="btn btn-primary w-100" data-bs-toggle="collapse" href="#details{{ room.room_id }}" role="button" aria-expanded="false" aria-controls="details{{ room.room_id }}">
+              View Book
+            </a>
+
+            <div class="collapse mt-3" id="details{{ room.room_id }}">
+              <p>Booked Date</p>
+              {% if room.booking_date.checkin and room.booking_date.checkout %}
+              <p>Check-in: {{ room.booking_date.checkin }} | Check-out: {{ room.booking_date.checkout }}</p>
+              <p>Adults: {{ room.booking_date.adults }} | Children: {{ room.booking_date.children }}</p>
+              {% endif %}
+              <p>Booked At: {{ room.booked_at.strftime('%Y-%m-%d %H:%M:%S') if room.booked_at else '-' }}</p>
+              <a href="{{ url_for('cancel_booking', room_id=room.room_id) }}" class="btn btn-danger w-100 mt-2">Cancel Booking</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">You haven't booked any rooms yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
